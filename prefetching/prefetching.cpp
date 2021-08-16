@@ -8,6 +8,13 @@
 #include <random>
 #include <vector>
 
+#if defined(_MSC_VER)
+#include <intrin.h>
+#define PREFETCH(address) _mm_prefetch((const char*) address, _MM_HINT_T2)
+#else
+#define PREFETCH(address) __builtin_prefetch(address)
+#endif
+
 // Accesses an array sequentially in row-major fashion
 static void rowMajor(benchmark::State &s) {
   // Input/output vector size
@@ -199,7 +206,7 @@ static void randomPrefetch(benchmark::State &s) {
   while (s.KeepRunning()) {
     for (int i = 0; i < N * N; i++) {
       // Pre-fetch an item for later
-      __builtin_prefetch(&v_out[v_in[i + 7]]);
+      PREFETCH(&v_out[v_in[i + 7]]);
       v_out[v_in[i]]++;
     }
   }

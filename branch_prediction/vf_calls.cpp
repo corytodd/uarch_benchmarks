@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <random>
 #include <vector>
+#include <iterator>
 
 // A simple case of polymorphism
 // One base class with a single virtual function
